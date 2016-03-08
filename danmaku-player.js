@@ -8,13 +8,17 @@
 (function(global) {
     function DanmakuPlayer(commentManager, options) {
         this.commentManager = commentManager;
+        this.commentManager.init();
 
         this.updateCmTimeIntervalId = -1;
         this.playhead = 0;
-        this._status = DanmakuPlayer.STATUS.stopped;
-
         this.options = options || {};
-        this.options.refreshMs = this.options.refreshMs || 42;
+
+        // XXX
+        // _timelineInterval 用于控制更新弹幕时间轴的间隔, 会影响弹幕的速度
+        // 但该值超过 2000 ms 后就没有任何反应了, 因此不推荐使用这个属性
+        this._timelineInterval = 42;
+        this._status = DanmakuPlayer.STATUS.stopped;
     }
 
     /**
@@ -30,10 +34,10 @@
 
         // 更新弹幕时间轴
         var startTime = new Date().getTime() - this.playhead;
-        this.updateCmTimeIntervalId = setInterval(function() {
+        this.updateCmTimeIntervalId = global.setInterval(function() {
             thiz.playhead = new Date().getTime() - startTime;
             thiz.commentManager.time(thiz.playhead);
-        }, this.options.refreshMs);
+        }, this._timelineInterval);
 
         this._status = DanmakuPlayer.STATUS.playing;
     };
@@ -43,7 +47,7 @@
      */
     DanmakuPlayer.prototype.pause = function() {
         this.commentManager.stop();
-        clearInterval(this.updateCmTimeIntervalId);
+        global.clearInterval(this.updateCmTimeIntervalId);
 
         this._status = DanmakuPlayer.STATUS.paused;
     };
@@ -84,4 +88,4 @@
     };
 
     global.DanmakuPlayer = DanmakuPlayer;
-})(window);
+})(this);
