@@ -8,6 +8,31 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" href="http://rawgithub.com/jabbany/CommentCoreLibrary/master/build/style.css">
+    <style>
+    .abp-demo {
+      position: fixed; 
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: #4f4747;
+      opacity: 0.8;
+    }
+    .comment-stage {
+        background-color: rgba(0,0,0,0.7);
+    }
+    .btn-close {
+      position: absolute;
+      right: 0;
+      z-index: 10000;
+      padding-right: 0.5em;
+      color: #fff;
+      font-size: 3em;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    </style>
   </head>
   <body>
     <section class="page-header">
@@ -46,7 +71,7 @@
 <h2>
 <a id="示例" class="anchor" href="#%E7%A4%BA%E4%BE%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>示例</h2>
 
-<p><a href="http://ufologist.github.io/danmaku-player/">danmaku-player</a></p>
+<a href="danmaku-player-demo.html">在新页面中查看示例</a>
 
 <h2>
 <a id="参考" class="anchor" href="#%E5%8F%82%E8%80%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>参考</h2>
@@ -66,6 +91,47 @@
 
     </section>
 
-  
+    <!-- CommentCoreLibrary 的基础 DOM 结构。这个结构也可以动态生成，只要 class 设置正确即可 -->
+    <div class="abp abp-demo">
+      <span class="btn-close">&times;</span>
+      <div class="container comment-stage"></div>
+    </div>
+
+    <!-- 依赖的 CommentCoreLibrary 和 danmaku-player -->
+    <script src="http://rawgithub.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js"></script>
+    <script src="http://rawgithub.com/ufologist/danmaku-player/master/danmaku-player.js"></script>
+    <script>
+    (function() {
+      var cm;
+      var danmakuPlayer;
+      function init() {
+        cm = new CommentManager(document.querySelector('.comment-stage'));
+        // 配置这个来调整弹幕的速度, 数值越大, 弹幕运行速度越低
+        // https://github.com/jabbany/CommentCoreLibrary/blob/master/docs/DoingItRight.md#弹幕速度-comment-default-speed
+        cm.options.global.scale = 2.25;
+
+        danmakuPlayer = new DanmakuPlayer(cm);
+      }
+
+      function loadDanmaku() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'danmaku.json', true);
+        xhr.responseType = 'json';
+        xhr.onload = function() {
+            cm.load(xhr.response);
+        };
+        xhr.send();
+      }
+
+      document.querySelector('.btn-close').addEventListener('click', function() {
+          document.querySelector('.abp-demo').style.display = 'none';
+          danmakuPlayer.reset();
+      }, false);
+
+      init();
+      loadDanmaku();
+      danmakuPlayer.play();
+    })();
+    </script>
   </body>
 </html>

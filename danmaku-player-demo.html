@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>danmaku-player 使用示例</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="http://rawgithub.com/jabbany/CommentCoreLibrary/master/build/style.css">
+    <style>
+    .abp-demo {
+        width: 100%;
+        height: 486px;
+        background-color: #4f4747;
+    }
+    .comment-stage {
+        background-color: rgba(0,0,0,0.7);
+    }
+    </style>
+</head>
+<body>
+    <h1><a href="https://github.com/ufologist/danmaku-player">danmaku-player</a> 使用示例</h1>
+    <!-- CommentCoreLibrary 的基础 DOM 结构。这个结构也可以动态生成，只要 class 设置正确即可 -->
+    <div class="abp abp-demo">
+        <div class="container comment-stage"></div>
+    </div>
+    <br>
+    <ol>
+        <li>
+            <button class="js-load-danmaku">加载弹幕数据</button>
+        </li>
+        <li>
+            <button class="js-play-danmaku">开始播放弹幕</button>
+            <button class="js-pause-danmaku">暂停播放弹幕</button>
+            <button class="js-reset-danmaku">重置弹幕</button>
+        </li>
+        <li>
+            调整弹幕播放的速度 <input class="js-danmaku-speed" type="range" value="2.25" min="1" max="5">
+        </li>
+        <li>
+            <button class="js-send-danmaku">发送弹幕</button>
+        </li>
+    </ol>
+    <div>
+        <p>弹幕数据和弹幕参数参考<a href="http://pm25.com/">绿色呼吸pm25.com</a></p>
+    </div>
+    <script src="http://rawgithub.com/jabbany/CommentCoreLibrary/master/build/CommentCoreLibrary.js"></script>
+    <script src="http://rawgithub.com/ufologist/danmaku-player/master/danmaku-player.js"></script>
+    <script>
+    (function(global) {
+        var cm;
+        var danmakuPlayer;
+        function init() {
+            cm = new CommentManager(document.querySelector('.comment-stage'));
+            // 配置这个来调整弹幕的速度, 数值越大, 弹幕运行速度越低
+            // https://github.com/jabbany/CommentCoreLibrary/blob/master/docs/DoingItRight.md#弹幕速度-comment-default-speed
+            cm.options.global.scale = 2.25;
+
+            danmakuPlayer = new DanmakuPlayer(cm);
+        }
+
+        document.querySelector('.js-load-danmaku').addEventListener('click', function(event) {
+            event.target.disabled = true;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'danmaku.json', true);
+            xhr.responseType = 'json';
+            xhr.onload = function() {
+                cm.load(xhr.response);
+            };
+            xhr.send();
+        }, false);
+
+        document.querySelector('.js-play-danmaku').addEventListener('click', function() {
+            danmakuPlayer.play();
+        }, false);
+
+        document.querySelector('.js-pause-danmaku').addEventListener('click', function() {
+            danmakuPlayer.pause();
+        }, false);
+
+        document.querySelector('.js-reset-danmaku').addEventListener('click', function(event) {
+            danmakuPlayer.reset();
+        }, false);
+
+        document.querySelector('.js-danmaku-speed').addEventListener('change', function() {
+            cm.options.global.scale = parseInt(event.target.value);
+        }, false);
+
+        document.querySelector('.js-send-danmaku').addEventListener('click', function() {
+            danmakuPlayer.send({
+                size: Math.ceil(Math.random() * 64),
+                color: Math.random().toString(16).substring(2, 8),
+                mode: 1,
+                text: '我也发一条' + Math.round(Math.random() * 100)
+            });
+        }, false);
+
+        init();
+
+        // 暴露给全局便于在 console 中调试
+        global.cm = cm;
+        global.danmakuPlayer = danmakuPlayer;
+    })(window);
+    </script>
+</body>
+</html>
