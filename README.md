@@ -12,11 +12,14 @@ var cm = new CommentManager(document.querySelector('.comment-stage'));
 var danmakuPlayer = new DanmakuPlayer(cm);
 
 // 弹幕播放器提供的 API
-danmakuPlayer.play();
-danmakuPlayer.pause();
-danmakuPlayer.reset();
-danmakuPlayer.send({});
+danmakuPlayer.play();   // 开始播放弹幕
+danmakuPlayer.pause();  // 暂停播放弹幕
+danmakuPlayer.reset();  // 重置弹幕
+danmakuPlayer.send({}); // 发送弹幕
 ```
+
+## 示例
+[danmaku-player](http://ufologist.github.io/danmaku-player/)
 
 ## 参考
 * [Joy-Zhang/DanmakuIt](https://github.com/Joy-Zhang/DanmakuIt)
