@@ -19,7 +19,8 @@ danmakuPlayer.send({}); // 发送弹幕
 ```
 
 ## 示例
-[danmaku-player](http://ufologist.github.io/danmaku-player/)
+* [danmaku-player](http://ufologist.github.io/danmaku-player/)
+* [SVG 弹幕](http://ufologist.github.io/danmaku-player/svg-danmaku.html)
 
 ## 参考
 * [Joy-Zhang/DanmakuIt](https://github.com/Joy-Zhang/DanmakuIt)
