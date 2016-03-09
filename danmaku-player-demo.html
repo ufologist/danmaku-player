@@ -64,7 +64,11 @@
             xhr.open('GET', 'danmaku.json', true);
             xhr.responseType = 'json';
             xhr.onload = function() {
-                cm.load(xhr.response);
+                var response = xhr.response;
+                if (typeof response == 'string') {
+                    response = JSON.parse(response);
+                }
+                cm.load(response);
             };
             xhr.send();
         }, false);

@@ -118,7 +118,13 @@
         xhr.open('GET', 'danmaku.json', true);
         xhr.responseType = 'json';
         xhr.onload = function() {
-            cm.load(xhr.response);
+          // XXX 手机端浏览器可能没有解析到 JSON 格式, 需要手工转一下
+          var response = xhr.response;
+          if (typeof response == 'string') {
+              response = JSON.parse(response);
+          }
+          cm.load(response);
+          danmakuPlayer.play();
         };
         xhr.send();
       }
@@ -130,7 +136,6 @@
 
       init();
       loadDanmaku();
-      danmakuPlayer.play();
     })();
     </script>
   </body>
