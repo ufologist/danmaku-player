@@ -25,5 +25,6 @@ danmakuPlayer.send({}); // 发送弹幕
 ## 参考
 * [Joy-Zhang/DanmakuIt](https://github.com/Joy-Zhang/DanmakuIt)
 * [jamesliu96/Damoo](https://github.com/jamesliu96/Damoo) canvas 渲染
+* [jquery.barrager.js](https://github.com/yaseng/jquery.barrager.js)
 * [绿色呼吸pm25.com](http://www.pm25.com/)
 * [百度图话|弹幕](http://imageplus.baidu.com/italk_home/detail.html)
